@@ -8,7 +8,7 @@ class WithARkitScreen extends StatefulWidget {
 }
 
 class CustomPopupMenu {
-  CustomPopupMenu({this.title, this.scene});
+  CustomPopupMenu({required this.title, required this.scene});
 
   String title;
   int scene;
@@ -39,7 +39,7 @@ class _WithARkitScreenState extends State<WithARkitScreen> {
 
   static final GlobalKey<ScaffoldState> _scaffoldKey =
   GlobalKey<ScaffoldState>();
-  UnityWidgetController _unityWidgetController;
+  UnityWidgetController? _unityWidgetController;
   double _sliderValue = 0.0;
 
   CustomPopupMenu _selectedChoices = choices[0];
@@ -51,7 +51,7 @@ class _WithARkitScreenState extends State<WithARkitScreen> {
 
     print('Selected');
 
-    _unityWidgetController.postMessage(
+    _unityWidgetController?.postMessage(
       'GameManager',
       'LoadGameScene',
       choice.scene.toString(),
@@ -98,9 +98,11 @@ class _WithARkitScreenState extends State<WithARkitScreen> {
         child: Stack(
           children: <Widget>[
             UnityWidget(
-              onUnityViewCreated: onUnityCreated,
-              isARScene: false,
+              onUnityCreated: onUnityCreated,
               onUnityMessage: onUnityMessage,
+              onUnitySceneLoaded: onUnitySceneLoaded,
+              useAndroidViewSurface: true,
+              borderRadius: const BorderRadius.all(Radius.circular(70)),
             ),
           ],
         ),
@@ -109,19 +111,28 @@ class _WithARkitScreenState extends State<WithARkitScreen> {
   }
 
   void setRotationSpeed(String speed) {
-    _unityWidgetController.postMessage(
+    _unityWidgetController?.postMessage(
       'Cube',
       'SetRotationSpeed',
       speed,
     );
   }
 
-  void onUnityMessage(controller, message) {
+  void onUnityMessage(message) {
     print('Received message from unity: ${message.toString()}');
   }
 
   // Callback that connects the created controller to the unity controller
   void onUnityCreated(controller) {
     this._unityWidgetController = controller;
+  }
+
+  void onUnitySceneLoaded(SceneLoaded? scene) {
+    if (scene != null) {
+      print('Received scene loaded from unity: ${scene.name}');
+      print('Received scene loaded from unity buildIndex: ${scene.buildIndex}');
+    } else {
+      print('Received scene loaded from unity: null');
+    }
   }
 }

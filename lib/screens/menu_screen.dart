@@ -17,23 +17,12 @@ class MenuScreen extends StatelessWidget {
                   color: Colors.grey,
                   child: Container(
                     width: double.infinity,
-                    child: RaisedButton(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text('AR Demo', style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18
-                          ),),
-                          Text('Please make sure you exported the ARKIT unity demo example', textAlign: TextAlign.center,),
-                        ],
-                      ),
-                      onPressed: () {
-                        // Navigate to the second screen using a named route.
-                        Navigator.pushNamed(context, '/ar');
-                      },
-                    ),
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                        ),
+                        onPressed: () => Navigator.pushNamed(context, '/ar'),
+                        child: Text("AR Demo")),
                   )
               ),
             ),
